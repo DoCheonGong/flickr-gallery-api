@@ -1,0 +1,56 @@
+@charset "UTF-8";
+@import "reset";
+
+body {
+    background-color: #eee;
+
+    #wrap {
+        width: 100%;
+        padding: 50px;
+        overflow: hidden;
+
+        #list {
+            opacity: 0;
+            transform: translateY(100px);
+            transition: 1s;
+
+            &.on {
+                opacity: 1;
+                transform: translateY(0px);
+            }
+
+            &::after {
+                content: "";
+                display: block;
+                clear: both;
+            }
+
+            li {
+                width: calc(100% / 6);
+                float: left;
+                padding: 10px; // li 사이에 간격을 준다
+
+                div {
+                    width: 100%;
+                    background-color: #fff;
+                    padding: 20px;
+                    border-radius: 5px;
+                    box-shadow: 5px 5px 20px #0000001A;
+                }
+
+                a {
+                    img {
+                        width: 100%;
+                    }
+                }
+
+                p {
+                    font: 12px/1.2 "Arial";
+                    color: #333;
+                    margin-top: 10px;
+                    margin-bottom: 10px;
+                }
+            }
+        }
+    }
+}
