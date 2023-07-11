@@ -4,10 +4,51 @@
 body {
     background-color: #eee;
 
+    #searchBox {
+        width: 100%;
+        padding: 50px 60px 0px;
+
+        #search {
+            width: 300px;
+            height: 30px;
+            background-color: #fff;
+            border: 1px dotted #ccc;
+            padding-left: 10px;
+        }
+
+        .btnSearch {
+            width: 80px;
+            height: 30px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            outline: none;
+            font: bold 12px/30px "Arial";
+            text-align: center;
+            cursor: pointer;
+            margin-left: 10px;
+            vertical-align: top; // 검색창과 높이 맞춤
+        }
+    }
+
     #wrap {
         width: 100%;
         padding: 50px;
         overflow: hidden;
+
+        .loading {
+            width: 100px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            transition: 1s;
+            opacity: 1;
+
+            &.off {
+                opacity: 0;
+            }
+        }
 
         #list {
             opacity: 0;
