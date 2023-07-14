@@ -1,6 +1,6 @@
 // https://live.staticflickr.com/{server-id}/{id}_{secret}_{size-suffix}.jpg
 // https://www.flickr.com/services/rest/?method=flickr.test.echo&name=value
-
+const body = document.querySelector("body");
 const base = "https://www.flickr.com/services/rest/?"
 const key = "8b2360dbd357c82af53e7d45c0651619";
 const method = "flickr.interestingness.getList";
@@ -24,6 +24,57 @@ item class는 동적으로 생성된 요소이므로 querySelector로 직접 참
 */
 
 callData(url2);
+
+frame.addEventListener("click", (e) => {
+    e.preventDefault();
+    /*
+        target을 이용해서 a 태그 찾기 (안에서 섬네일 찾기)
+    */
+    // padding이 아닌 margin으로 거리를 계산하게되면
+    // 그 공간은 #list로 인식되므로 return 실행 
+    if (e.target == frame) return;
+
+    // 이미지를 클릭했을 때 a 태그를 추적해서 href 속성을 뽑아야
+    // 이후 큰 이미지 주소에 해당하는 그림을 동적으로 띄워줄 수 있다
+    let target = e.target.closest(".item").querySelector(".thumb");
+
+    // 반드시 클릭한 대상이 .thumb이어야만 보이도록 한다
+    if (e.target == target) {
+        // 클릭한 곳에서 a 태그를 찾고 href 속성 안에 있는
+        // 큰 이미지 주소를 넣는다
+        let imgSrc = target.parentElement.getAttribute("href");
+
+        // 동적으로 popup을 aside 태그로 만든다
+        let pop = document.createElement("aside");
+        pop.classList.add("pop");
+        let popup =
+            `
+                <div class="con">
+                    <img src="${imgSrc}">
+                </div>
+                <span class="close">닫기</span>
+            `;
+        pop.innerHTML = popup;
+        body.querySelector("main").append(pop);
+        // body든 main이든 계단현상이 일어나지 않는 곳에
+        // 동적요소를 넣어준다
+        // body.append(pop);
+        body.style.overflow = "hidden"; // 이미지 확대 시 스크롤 방지
+
+        // 닫기 버튼으로 동적으로 생성 (body 대신 main을 써도 된다)
+        body.addEventListener("click", (e) => {
+            e.preventDefault();
+            let pop = body.querySelector(".pop");
+            if (pop) {
+                let close = pop.querySelector(".close");
+                if (e.target == close) {
+                    pop.remove();
+                    body.style.overflow = "auto";
+                }
+            }
+        })
+    }
+})
 
 function callData(url) {
     frame.innerHTML = "";
@@ -53,6 +104,11 @@ function callData(url) {
                     frame.style.height = "auto";
                     frame.classList.remove("on");
 
+                    let isErrMsgs = frame.parentElement.querySelectorAll("p");
+                    if (isErrMsgs.length > 0) {
+                        frame.parentElement.querySelector('p').remove();
+                    }
+
                     let errMsgs = document.createElement("p");
                     errMsgs.append("검색 결과가 없습니다. 검색어를 확인해주세요.");
                     frame.parentElement.append(errMsgs);
@@ -65,7 +121,9 @@ function callData(url) {
                 frame.classList.remove("on");
 
                 let isErrMsgs = frame.parentElement.querySelectorAll("p");
-                if (isErrMsgs);
+                if (isErrMsgs.length > 0) {
+                    frame.parentElement.querySelector('p').remove();
+                }
                 let errMsgs = document.createElement("p");
                 errMsgs.append("검색어가 없습니다. 검색어를 입력해주세요.");
                 frame.parentElement.append(errMsgs); // 부모 요소를 모를 때
@@ -88,19 +146,30 @@ function callData(url) {
                         frame.style.height = "auto";
                         frame.classList.remove("on");
 
+                        let isErrMsgs = frame.parentElement.querySelectorAll("p");
+                        if (isErrMsgs.length > 0) {
+                            frame.parentElement.querySelector('p').remove();
+                        }
+
                         let errMsgs = document.createElement("p");
                         errMsgs.append("검색 결과가 없습니다. 검색어를 확인해주세요.");
                         frame.parentElement.append(errMsgs);
                     }
                 } else {
-                    frame.innerHTML = "";
+                    // 로딩바를 없애고 높이값을 초기화하고 p태그를 만들어서
+                    // 경고문구를 출력한다
+                    frame.innerHTML = ""; // 높이값을 초기화하기 위한 빈 HTML
                     frame.style.height = "auto";
                     frame.classList.remove("on");
 
+                    let isErrMsgs = frame.parentElement.querySelectorAll("p");
+                    if (isErrMsgs.length > 0) {
+                        frame.parentElement.querySelector('p').remove();
+                    }
                     let errMsgs = document.createElement("p");
-                    errMsgs.remove();
                     errMsgs.append("검색어가 없습니다. 검색어를 입력해주세요.");
-                    frame.parentElement.append(errMsgs);
+                    frame.parentElement.append(errMsgs); // 부모 요소를 모를 때
+                    // frame.closest("#wrap").append(errMsgs); // 부모 요소를 알고 있을 때
                 }
             } // Enter 키를 누르면 검색
             // if(e.keyCode == 13)
@@ -124,10 +193,6 @@ function createList(items) {
                     <img src=${imgSrc} alt="${el.title}">
                 </a>
                 <p>${el.title}</p>
-                <!-- <span>
-                    <img class="profile" src="http://farm${el.farm}.staticflickr.com/${el.server}/buddyicons/${el.owner}.jpg">
-                    <strong>${el.owner}</strong>
-                </span> -->
             </div>
         </li>
         `;
@@ -167,8 +232,4 @@ function isoLayout() {
         columnWidth: ".item",
         transitionDuration: "0.5s"
     });
-}
-
-function search() {
-
 }

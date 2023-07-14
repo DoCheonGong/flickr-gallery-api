@@ -75,7 +75,7 @@ body #wrap #list::after {
 body #wrap #list li {
   width: 16.6666666667%;
   float: left;
-  padding: 10px;
+  margin: 10px;
 }
 body #wrap #list li div {
   width: 100%;
@@ -92,6 +92,27 @@ body #wrap #list li p {
   color: #333;
   margin-top: 10px;
   margin-bottom: 10px;
+}
+body .pop {
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.7333333333);
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+body .pop img {
+  height: 100%;
+}
+body .pop .close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  color: #fff;
+  cursor: pointer;
 }
 
 /*# sourceMappingURL=style.css.map */
